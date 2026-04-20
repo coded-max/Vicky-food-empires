@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VICKY FOOD EMPIRE</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  font-family: Inter;
+  background: radial-gradient(circle at top, #1a1a1a 0%, #050505 70%);
+  color:white;
+  overflow-x:hidden;
+}
+
+/* animated background glow */
+body::before{
+  content:"";
+  position:fixed;
+  width:200%;
+  height:200%;
+  background: radial-gradient(circle, rgba(212,175,55,0.06) 2px, transparent 2px);
+  background-size:70px 70px;
+  animation: move 40s linear infinite;
+  z-index:-1;
+}
+
+@keyframes move{
+  from{transform:translate(0,0);}
+  to{transform:translate(-200px,-200px);}
+}
+
+/* gold glow text */
+.gold{
+  background: linear-gradient(90deg,#d4af37,#fff3b0,#d4af37);
+  background-size:200%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation: shine 5s linear infinite;
+}
+
+@keyframes shine{
+  0%{background-position:0%;}
+  100%{background-position:200%;}
+}
+
+/* floating animation */
+.float{animation:float 4s ease-in-out infinite;}
+@keyframes float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+}
+
+/* fade in */
+.fade{animation:fadeIn .8s ease;}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* glass UI */
+.glass{
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(15px);
+  border:1px solid rgba(212,175,55,0.15);
+  border-radius:18px;
+}
+
+/* cards */
+.card{
+  transition:.4s;
+}
+.card:hover{
+  transform:translateY(-10px) scale(1.02);
+  box-shadow:0 20px 60px rgba(212,175,55,0.2);
+}
+
+/* premium button */
+.btn{
+  background: linear-gradient(135deg,#d4af37,#f5e8a0);
+  color:black;
+  font-weight:600;
+  border-radius:14px;
+  padding:12px;
+  transition:.3s;
+}
+.btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 10px 30px rgba(212,175,55,0.4);
+}
+
+/* modal pop */
+.modal{
+  animation:pop .4s ease;
+}
+@keyframes pop{
+  from{transform:scale(.9);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<div class="flex justify-between items-center p-5 border-b border-zinc-800">
+  <h1 class="gold text-xl font-bold float">VICKY FOOD EMPIRE</h1>
+
+  <div class="flex gap-3">
+    <a href="https://wa.me/2347085152972"
+       class="bg-green-500 px-4 py-2 rounded-full text-sm">
+       WhatsApp
+    </a>
+    <button onclick="openAdmin()" class="text-zinc-400 text-xs">Admin</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="text-center py-16 px-4 fade">
+  <h1 class="text-4xl md:text-6xl font-bold float">
+    Luxury Catering <span class="gold">Experience</span>
+  </h1>
+
+  <p class="text-zinc-400 mt-4">
+    Premium Food • Events • Lagos Nigeria
+  </p>
+
+  <div class="mt-8 flex justify-center gap-4">
+    <button onclick="openFood()" class="btn">🍽️ Order Food</button>
+    <button onclick="openEvent()" class="border border-amber-400 px-6 py-3 rounded-xl hover:bg-amber-400 hover:text-black">
+      🎉 Book Event
+    </button>
+  </div>
+</section>
+
+<!-- FOOD MODAL -->
+<div id="foodModal" class="hidden fixed inset-0 bg-black/90 p-4 z-50 overflow-auto">
+<div class="glass max-w-xl mx-auto p-5 modal">
+
+<h2 class="gold text-xl mb-4">🍽️ Food Menu</h2>
+
+<div id="foodList" class="space-y-3"></div>
+
+<h3 class="mt-4 gold">Cart</h3>
+<div id="cart" class="text-sm space-y-1"></div>
+
+<p class="mt-2">Total: <span id="total" class="gold">₦0</span></p>
+
+<input id="location" placeholder="Delivery location"
+class="w-full p-3 mt-3 bg-zinc-900 rounded-xl">
+
+<textarea id="notes" placeholder="Notes"
+class="w-full p-3 mt-2 bg-zinc-900 rounded-xl"></textarea>
+
+<button onclick="sendFood()" class="btn w-full mt-4">
+Send via WhatsApp
+</button>
+
+<button onclick="closeFood()" class="text-red-400 w-full mt-3">Close</button>
+
+</div>
+</div>
+
+<!-- EVENT MODAL -->
+<div id="eventModal" class="hidden fixed inset-0 bg-black/90 p-4 z-50">
+<div class="glass max-w-xl mx-auto p-5 modal">
+
+<h2 class="gold text-xl mb-4">🎉 Book Event</h2>
+
+<select id="etype" class="w-full p-3 bg-zinc-900 rounded-xl mb-2">
+  <option>Select Event</option>
+  <option>Wedding</option>
+  <option>Birthday</option>
+  <option>Corporate</option>
+  <option>Anniversary</option>
+  <option>Engagement</option>
+  <option>Baby Shower</option>
+  <option>Funeral</option>
+</select>
+
+<input id="edate" type="date" class="w-full p-3 bg-zinc-900 rounded-xl mb-2">
+<input id="eguests" placeholder="Guests" class="w-full p-3 bg-zinc-900 rounded-xl mb-2">
+<input id="elocation" placeholder="Venue" class="w-full p-3 bg-zinc-900 rounded-xl mb-2">
+
+<textarea id="emenu" placeholder="Menu request"
+class="w-full p-3 bg-zinc-900 rounded-xl"></textarea>
+
+<button onclick="sendEvent()" class="btn w-full mt-4">
+Send Booking
+</button>
+
+<button onclick="closeEvent()" class="text-red-400 w-full mt-3">Close</button>
+
+</div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminPanel" class="hidden fixed inset-0 bg-black z-[999] p-5 overflow-y-auto">
+
+<div class="flex justify-between mb-5">
+<h2 class="gold text-xl">📊 Live Dashboard</h2>
+<button onclick="closeAdmin()" class="text-red-400">Close</button>
+</div>
+
+<div class="grid md:grid-cols-2 gap-4">
+
+<div class="glass p-4">
+<h3 class="gold mb-2">🍽️ Food Orders</h3>
+<div id="foodOrders" class="space-y-2 text-sm"></div>
+</div>
+
+<div class="glass p-4">
+<h3 class="gold mb-2">🎉 Events</h3>
+<div id="eventOrders" class="space-y-2 text-sm"></div>
+</div>
+
+</div>
+</div>
+
+<!-- FLOAT -->
+<a href="https://wa.me/2347085152972"
+class="fixed bottom-5 right-5 bg-green-500 w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-xl float">
+💬
+</a>
+
+<script>
+
+const WA="2347085152972";
+
+const menu=[
+{name:"Jollof Rice",price:5000},
+{name:"Fried Rice",price:6000},
+{name:"Chicken",price:4000},
+{name:"Pepper Soup",price:7000}
+];
+
+let cart=[];
+let foodDB=JSON.parse(localStorage.getItem("foodDB"))||[];
+let eventDB=JSON.parse(localStorage.getItem("eventDB"))||[];
+
+/* FOOD */
+function loadFood(){
+let box=document.getElementById("foodList");
+box.innerHTML="";
+menu.forEach((m,i)=>{
+box.innerHTML+=`
+<div class="flex justify-between bg-zinc-900 p-3 rounded-xl card fade">
+<span>${m.name} ₦${m.price}</span>
+<button onclick="add(${i})" class="bg-amber-400 text-black px-3 rounded-full">
+Add
+</button>
+</div>`;
+});
+}
+
+function add(i){
+cart.push(menu[i]);
+render();
+}
+
+function render(){
+let t=0;
+let box=document.getElementById("cart");
+box.innerHTML="";
+cart.forEach(c=>{
+t+=c.price;
+box.innerHTML+=`<div>${c.name}</div>`;
+});
+document.getElementById("total").innerText="₦"+t;
+}
+
+/* FOOD SEND */
+function sendFood(){
+if(cart.length===0)return alert("Add items");
+
+let order={
+id:"F-"+Date.now(),
+items:cart,
+total:document.getElementById("total").innerText,
+location:location.value,
+notes:notes.value,
+time:new Date().toLocaleString()
+};
+
+foodDB.push(order);
+localStorage.setItem("foodDB",JSON.stringify(foodDB));
+
+let msg="🍽️ *ORDER*%0A%0A";
+cart.forEach(c=>msg+=`• ${c.name}%0A`);
+msg+=`%0A💰 ${order.total}`;
+msg+=`%0A📍 ${order.location}`;
+msg+=`%0A📝 ${order.notes}`;
+
+window.open(`https://wa.me/${WA}?text=${msg}`,'_blank');
+
+cart=[];
+render();
+closeFood();
+}
+
+/* EVENT */
+function sendEvent(){
+
+let o={
+id:"E-"+Date.now(),
+type:etype.value,
+date:edate.value,
+guests:eguests.value,
+location:elocation.value,
+menu:emenu.value,
+time:new Date().toLocaleString()
+};
+
+eventDB.push(o);
+localStorage.setItem("eventDB",JSON.stringify(eventDB));
+
+let msg="🎉 *EVENT*%0A%0A";
+msg+=`Type: ${o.type}%0A`;
+msg+=`Date: ${o.date}%0A`;
+msg+=`Guests: ${o.guests}%0A`;
+msg+=`Venue: ${o.location}%0A`;
+msg+=`Menu: ${o.menu}`;
+
+window.open(`https://wa.me/${WA}?text=${msg}`,'_blank');
+
+closeEvent();
+}
+
+/* ADMIN */
+function openAdmin(){
+adminPanel.classList.remove("hidden");
+renderAdmin();
+}
+
+function closeAdmin(){
+adminPanel.classList.add("hidden");
+}
+
+function renderAdmin(){
+
+let f=document.getElementById("foodOrders");
+let e=document.getElementById("eventOrders");
+
+f.innerHTML="";
+e.innerHTML="";
+
+foodDB.slice().reverse().forEach(o=>{
+f.innerHTML+=`<div class="bg-zinc-800 p-2 rounded">${o.id}<br>${o.total}<br>${o.time}</div>`;
+});
+
+eventDB.slice().reverse().forEach(o=>{
+e.innerHTML+=`<div class="bg-zinc-800 p-2 rounded">${o.id}<br>${o.type}<br>${o.time}</div>`;
+});
+}
+
+/* MODALS */
+function openFood(){foodModal.classList.remove("hidden");loadFood();}
+function closeFood(){foodModal.classList.add("hidden");}
+function openEvent(){eventModal.classList.remove("hidden");}
+function closeEvent(){eventModal.classList.add("hidden");}
+
+</script>
+
+</body>
+</html>
